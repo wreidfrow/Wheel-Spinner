@@ -18,6 +18,7 @@
     }
     h1 {
       margin-bottom: 20px;
+      text-align: center;
     }
     .wheel-container {
       position: relative;
@@ -31,62 +32,23 @@
     .wheel {
       width: 100%;
       height: 100%;
+      position: relative;
       transform: rotate(0deg);
       transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
-      background: conic-gradient(
-        red 0% 1.923%,
-        black 1.923% 3.846%,
-        red 3.846% 5.769%,
-        black 5.769% 7.692%,
-        red 7.692% 9.615%,
-        black 9.615% 11.538%,
-        red 11.538% 13.461%,
-        black 13.461% 15.384%,
-        red 15.384% 17.307%,
-        black 17.307% 19.23%,
-        red 19.23% 21.153%,
-        black 21.153% 23.076%,
-        red 23.076% 25%,
-        black 25% 26.923%,
-        red 26.923% 28.846%,
-        black 28.846% 30.769%,
-        red 30.769% 32.692%,
-        black 32.692% 34.615%,
-        red 34.615% 36.538%,
-        black 36.538% 38.461%,
-        red 38.461% 40.384%,
-        black 40.384% 42.307%,
-        red 42.307% 44.23%,
-        black 44.23% 46.153%,
-        red 46.153% 48.076%,
-        black 48.076% 50%,
-        red 50% 51.923%,
-        black 51.923% 53.846%,
-        red 53.846% 55.769%,
-        black 55.769% 57.692%,
-        red 57.692% 59.615%,
-        black 59.615% 61.538%,
-        red 61.538% 63.461%,
-        black 63.461% 65.384%,
-        red 65.384% 67.307%,
-        black 67.307% 69.23%,
-        red 69.23% 71.153%,
-        black 71.153% 73.076%,
-        red 73.076% 75%,
-        black 75% 76.923%,
-        red 76.923% 78.846%,
-        black 78.846% 80.769%,
-        red 80.769% 82.692%,
-        black 82.692% 84.615%,
-        red 84.615% 86.538%,
-        black 86.538% 88.461%,
-        red 88.461% 90.384%,
-        black 90.384% 92.307%,
-        red 92.307% 94.23%,
-        black 94.23% 96.153%,
-        red 96.153% 98.076%,
-        black 98.076% 100%
-      );
+    }
+    .segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 50%;
+      left: 50%;
+      transform-origin: 0% 0%;
+      background-color: red;
+      color: #fff;
+      font-size: 10px;
+      text-align: right;
+      padding-right: 5px;
+      line-height: 1;
     }
     .pointer {
       width: 0; 
@@ -112,7 +74,6 @@
       margin-top: 40px;
       width: 150px;
       height: 220px;
-      background-image: url('https://deck.of.cards/assets/img/cards/hearts_5.svg');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -128,36 +89,62 @@
   </div>
   <button onclick="spinWheel()">Spin</button>
   <div class="reveal-card" id="reveal"></div>  <script>
-    function spinWheel() {
-      const wheel = document.getElementById('wheel');
-      const reveal = document.getElementById('reveal');
+    const suits = ['C', 'H', 'S', 'D'];
+    const values = ['A', '4', '7', '10', 'K', '3', '6', '9', 'Q', '2', '5', '8', 'J'];
 
+    function siStebbins(index) {
+      return values[index % 13] + suits[Math.floor(index / 13) % 4];
+    }
+
+    const cardImages = {
+      'AH': 'hearts_a', '2H': 'hearts_2', '3H': 'hearts_3', '4H': 'hearts_4', '5H': 'hearts_5',
+      '6H': 'hearts_6', '7H': 'hearts_7', '8H': 'hearts_8', '9H': 'hearts_9', '10H': 'hearts_10',
+      'JH': 'hearts_j', 'QH': 'hearts_q', 'KH': 'hearts_k',
+      'AC': 'clubs_a', '2C': 'clubs_2', '3C': 'clubs_3', '4C': 'clubs_4', '5C': 'clubs_5',
+      '6C': 'clubs_6', '7C': 'clubs_7', '8C': 'clubs_8', '9C': 'clubs_9', '10C': 'clubs_10',
+      'JC': 'clubs_j', 'QC': 'clubs_q', 'KC': 'clubs_k',
+      'AD': 'diamonds_a', '2D': 'diamonds_2', '3D': 'diamonds_3', '4D': 'diamonds_4', '5D': 'diamonds_5',
+      '6D': 'diamonds_6', '7D': 'diamonds_7', '8D': 'diamonds_8', '9D': 'diamonds_9', '10D': 'diamonds_10',
+      'JD': 'diamonds_j', 'QD': 'diamonds_q', 'KD': 'diamonds_k',
+      'AS': 'spades_a', '2S': 'spades_2', '3S': 'spades_3', '4S': 'spades_4', '5S': 'spades_5',
+      '6S': 'spades_6', '7S': 'spades_7', '8S': 'spades_8', '9S': 'spades_9', '10S': 'spades_10',
+      'JS': 'spades_j', 'QS': 'spades_q', 'KS': 'spades_k'
+    };
+
+    let spinIndex = 0;
+    let anglePerSegment = 360 / 52;
+
+    const wheel = document.getElementById('wheel');
+
+    // create segments
+    for (let i = 0; i < 52; i++) {
+      const seg = document.createElement('div');
+      seg.className = 'segment';
+      const angle = anglePerSegment * i;
+      seg.style.transform = `rotate(${angle}deg) skewY(-84.6deg)`;
+      seg.style.backgroundColor = i % 2 === 0 ? 'red' : 'black';
+      seg.innerText = siStebbins(i);
+      wheel.appendChild(seg);
+    }
+
+    function spinWheel() {
+      const reveal = document.getElementById('reveal');
       reveal.style.display = 'none';
 
-      // Force the wheel to land on the 5 of Hearts (somewhere in the middle of the wheel)
-      const baseRotation = 360 * 5; // spin multiple times
-      const offsetTo5Hearts = 100; // adjust this angle to land on the segment you want
+      const segmentToLand = spinIndex % 52;
+      const rotation = (360 * 5) + (360 - (segmentToLand * anglePerSegment)) - (anglePerSegment / 2);
 
-      const totalRotation = baseRotation + offsetTo5Hearts;
+      wheel.style.transform = `rotate(${rotation}deg)`;
 
-      wheel.style.transform = `rotate(${totalRotation}deg)`;
+      const cardCode = siStebbins(spinIndex % 52);
+      const imageKey = cardImages[cardCode];
 
       setTimeout(() => {
         reveal.style.display = 'block';
+        reveal.style.backgroundImage = `url('https://deck.of.cards/assets/img/cards/${imageKey}.svg')`;
       }, 5000);
+
+      spinIndex++;
     }
   </script></body>
-</html>                                                                                                                                                                                                                                                                                                                                <body>
-                                                                                                                                                                                                                                                                                                                                  <h1>Think of a card...</h1>
-                                                                                                                                                                                                                                                                                                                                    <div class="card-container" onclick="flipCard()">
-                                                                                                                                                                                                                                                                                                                                        <div class="card" id="card">
-                                                                                                                                                                                                                                                                                                                                              <div class="card-face front"></div>
-                                                                                                                                                                                                                                                                                                                                                    <div class="card-face back"></div>
-                                                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                                                                                                                                                                            <p>Tap the card to reveal your thought...</p>  <script>
-                                                                                                                                                                                                                                                                                                                                                                function flipCard() {
-                                                                                                                                                                                                                                                                                                                                                                      document.getElementById('card').classList.toggle('flipped');
-                                                                                                                                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                                                                                                                                            </script></body>
-                                                                                                                                                                                                                                                                                                                                                                            </html>
+</html>
