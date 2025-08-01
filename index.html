@@ -1,69 +1,153 @@
 <!DOCTYPE html><html lang="en">
-    <head>
-      <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Pick a Card</title>
-            <style>
-                body {
-                      margin: 0;
-                            padding: 0;
-                                  background: #0D1B2A;
-                                        color: #fff;
-                                              font-family: sans-serif;
-                                                    display: flex;
-                                                          flex-direction: column;
-                                                                justify-content: center;
-                                                                      align-items: center;
-                                                                            height: 100vh;
-                                                                                }
-                                                                                    h1 {
-                                                                                          font-size: 2em;
-                                                                                                margin-bottom: 10px;
-                                                                                                    }
-                                                                                                        .card-container {
-                                                                                                              width: 150px;
-                                                                                                                    height: 220px;
-                                                                                                                          perspective: 1000px;
-                                                                                                                                cursor: pointer;
-                                                                                                                                    }
-                                                                                                                                        .card {
-                                                                                                                                              width: 100%;
-                                                                                                                                                    height: 100%;
-                                                                                                                                                          position: relative;
-                                                                                                                                                                transition: transform 1.2s;
-                                                                                                                                                                      transform-style: preserve-3d;
-                                                                                                                                                                          }
-                                                                                                                                                                              .flipped {
-                                                                                                                                                                                    transform: rotateY(180deg);
-                                                                                                                                                                                        }
-                                                                                                                                                                                            .card-face {
-                                                                                                                                                                                                  position: absolute;
-                                                                                                                                                                                                        width: 100%;
-                                                                                                                                                                                                              height: 100%;
-                                                                                                                                                                                                                    backface-visibility: hidden;
-                                                                                                                                                                                                                          background-size: cover;
-                                                                                                                                                                                                                                border-radius: 8px;
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                        .front {
-                                                                                                                                                                                                                                              background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Bicycle_card_back_blue.svg/1200px-Bicycle_card_back_blue.svg.png');
-                                                                                                                                                                                                                                                  }
-                                                                                                                                                                                                                                                      .back {
-                                                                                                                                                                                                                                                            transform: rotateY(180deg);
-                                                                                                                                                                                                                                                                  background-image: url('https://deck.of.cards/assets/img/cards/hearts_5.svg');
-                                                                                                                                                                                                                                                                        background-color: white;
-                                                                                                                                                                                                                                                                              background-position: center;
-                                                                                                                                                                                                                                                                                    background-repeat: no-repeat;
-                                                                                                                                                                                                                                                                                          background-size: contain;
-                                                                                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                                                                                                  p {
-                                                                                                                                                                                                                                                                                                        margin-top: 20px;
-                                                                                                                                                                                                                                                                                                              font-size: 1.1em;
-                                                                                                                                                                                                                                                                                                                    text-align: center;
-                                                                                                                                                                                                                                                                                                                          max-width: 300px;
-                                                                                                                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                                                                                                                                </style>
-                                                                                                                                                                                                                                                                                                                                </head>
-                                                                                                                                                                                                                                                                                                                                <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spin the Card Wheel</title>
+  <style>
+    body {
+      background: #0D1B2A;
+      color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .wheel-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid #fff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    .wheel {
+      width: 100%;
+      height: 100%;
+      transform: rotate(0deg);
+      transition: transform 5s cubic-bezier(0.33, 1, 0.68, 1);
+      background: conic-gradient(
+        red 0% 1.923%,
+        black 1.923% 3.846%,
+        red 3.846% 5.769%,
+        black 5.769% 7.692%,
+        red 7.692% 9.615%,
+        black 9.615% 11.538%,
+        red 11.538% 13.461%,
+        black 13.461% 15.384%,
+        red 15.384% 17.307%,
+        black 17.307% 19.23%,
+        red 19.23% 21.153%,
+        black 21.153% 23.076%,
+        red 23.076% 25%,
+        black 25% 26.923%,
+        red 26.923% 28.846%,
+        black 28.846% 30.769%,
+        red 30.769% 32.692%,
+        black 32.692% 34.615%,
+        red 34.615% 36.538%,
+        black 36.538% 38.461%,
+        red 38.461% 40.384%,
+        black 40.384% 42.307%,
+        red 42.307% 44.23%,
+        black 44.23% 46.153%,
+        red 46.153% 48.076%,
+        black 48.076% 50%,
+        red 50% 51.923%,
+        black 51.923% 53.846%,
+        red 53.846% 55.769%,
+        black 55.769% 57.692%,
+        red 57.692% 59.615%,
+        black 59.615% 61.538%,
+        red 61.538% 63.461%,
+        black 63.461% 65.384%,
+        red 65.384% 67.307%,
+        black 67.307% 69.23%,
+        red 69.23% 71.153%,
+        black 71.153% 73.076%,
+        red 73.076% 75%,
+        black 75% 76.923%,
+        red 76.923% 78.846%,
+        black 78.846% 80.769%,
+        red 80.769% 82.692%,
+        black 82.692% 84.615%,
+        red 84.615% 86.538%,
+        black 86.538% 88.461%,
+        red 88.461% 90.384%,
+        black 90.384% 92.307%,
+        red 92.307% 94.23%,
+        black 94.23% 96.153%,
+        red 96.153% 98.076%,
+        black 98.076% 100%
+      );
+    }
+    .pointer {
+      width: 0; 
+      height: 0; 
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 20px solid #fff;
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #FFC940;
+      border: none;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .reveal-card {
+      margin-top: 40px;
+      width: 150px;
+      height: 220px;
+      background-image: url('https://deck.of.cards/assets/img/cards/hearts_5.svg');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Spin the Wheel to Pick a Card</h1>
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div class="wheel" id="wheel"></div>
+  </div>
+  <button onclick="spinWheel()">Spin</button>
+  <div class="reveal-card" id="reveal"></div>  <script>
+    function spinWheel() {
+      const wheel = document.getElementById('wheel');
+      const reveal = document.getElementById('reveal');
+
+      reveal.style.display = 'none';
+
+      // Force the wheel to land on the 5 of Hearts (somewhere in the middle of the wheel)
+      const baseRotation = 360 * 5; // spin multiple times
+      const offsetTo5Hearts = 100; // adjust this angle to land on the segment you want
+
+      const totalRotation = baseRotation + offsetTo5Hearts;
+
+      wheel.style.transform = `rotate(${totalRotation}deg)`;
+
+      setTimeout(() => {
+        reveal.style.display = 'block';
+      }, 5000);
+    }
+  </script></body>
+</html>                                                                                                                                                                                                                                                                                                                                <body>
                                                                                                                                                                                                                                                                                                                                   <h1>Think of a card...</h1>
                                                                                                                                                                                                                                                                                                                                     <div class="card-container" onclick="flipCard()">
                                                                                                                                                                                                                                                                                                                                         <div class="card" id="card">
